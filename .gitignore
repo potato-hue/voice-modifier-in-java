@@ -1,2 +1,5 @@
 .idea
 Voice Modifier.iml
+*.mp3
+*.wav
+*.class

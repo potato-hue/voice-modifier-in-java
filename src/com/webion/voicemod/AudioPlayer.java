@@ -1,21 +1,43 @@
 package com.webion.voicemod;
 
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.*;
-public class AudioPlayer {
-    JFrame frame;
-    public AudioPlayer(){
-        frame = new JFrame("Audio Player !!!");
-        JButton audioPlayButton = new JButton("play audio");
-        frame.getContentPane().add(audioPlayButton, BorderLayout.CENTER);
-        frame.setSize(600, 600);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-        audioPlayButton.addActionListener((al)->playAudio());   
-    }
-    public void playAudio(){
+import javax.sound.sampled.*;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.Arrays;
 
+public class AudioPlayer {
+    final int BUFFER_SIZE = 1024;
+    public AudioPlayer() throws IOException {
+        Mixer.Info[] allMixers = AudioSystem.getMixerInfo();
+        Mixer headphone = AudioSystem.getMixer(allMixers[6]);
+        SourceDataLine line = null;
+        File audioFile = null;
+        AudioInputStream audioStream = null;
+        try {
+            line = (SourceDataLine) headphone.getLine(headphone.getSourceLineInfo()[0]);
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        }
+        audioFile = new File("C:\\Users\\rakti\\OneDrive\\Code\\Voice Modifier\\src\\CantinaBand3.wav");
+        try {
+            audioStream = AudioSystem.getAudioInputStream(audioFile);
+        } catch (UnsupportedAudioFileException | IOException e) {
+            e.printStackTrace();
+        }
+        byte[]buffer = new byte[BUFFER_SIZE];
+        int read = -1;
+        assert line != null;
+        assert audioStream != null;
+        try {
+            line.open(audioStream.getFormat());
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        }
+        line.start();
+        while ((read = audioStream.read(buffer)) != -1) {
+            System.out.println("ok");
+            line.write(buffer, 0, read);
+        }
     }
 }
