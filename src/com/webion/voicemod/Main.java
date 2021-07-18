@@ -1,9 +1,6 @@
-package com.webion.voicemod;
-
-import java.io.IOException;
-
+package com.webion.voicemod;    
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args){
         new AudioPlayer();
     }
 }
