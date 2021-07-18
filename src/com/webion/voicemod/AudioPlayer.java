@@ -36,7 +36,6 @@ public class AudioPlayer {
         }
         line.start();
         while ((read = audioStream.read(buffer)) != -1) {
-            System.out.println("ok");
             line.write(buffer, 0, read);
         }
     }
