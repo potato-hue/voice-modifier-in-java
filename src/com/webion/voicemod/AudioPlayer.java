@@ -7,10 +7,10 @@ import java.io.IOException;
 public class AudioPlayer {
     final int BUFFER_SIZE = 1024;
 
-    public AudioPlayer() {
+    public AudioPlayer(int mixerIndex) {
         try {
             Mixer.Info[] allMixers = AudioSystem.getMixerInfo();
-            Mixer headphone = AudioSystem.getMixer(allMixers[6]);
+            Mixer headphone = AudioSystem.getMixer(allMixers[mixerIndex]);
             SourceDataLine line = (SourceDataLine) headphone.getLine(headphone.getSourceLineInfo()[0]);
             File audioFile = new File("C:\\Users\\rakti\\OneDrive\\Code\\Voice Modifier\\src\\CantinaBand3.wav");
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
