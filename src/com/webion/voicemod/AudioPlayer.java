@@ -7,14 +7,18 @@ import java.io.IOException;
 public class AudioPlayer {
     final int BUFFER_SIZE = 1024;
 
-    public AudioPlayer(int mixerIndex) {
+    public AudioPlayer(int SourceDataLineIndex, int TargetDataLineIndex) {
         try {
             Mixer.Info[] allMixers = AudioSystem.getMixerInfo();
-            Mixer headphone = AudioSystem.getMixer(allMixers[mixerIndex]);
+            Mixer headphone = AudioSystem.getMixer(allMixers[SourceDataLineIndex]);
+            Mixer mic = AudioSystem.getMixer(allMixers[TargetDataLineIndex]);
             SourceDataLine line = (SourceDataLine) headphone.getLine(headphone.getSourceLineInfo()[0]);
-            File audioFile = new File("C:\\Users\\rakti\\OneDrive\\Code\\Voice Modifier\\src\\CantinaBand3.wav");
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+            TargetDataLine tLine = (TargetDataLine) mic.getLine(mic.getTargetLineInfo()[0]);
+            tLine.open();
+            tLine.start();
+            AudioInputStream audioStream = new AudioInputStream(tLine);
             byte[] buffer = new byte[BUFFER_SIZE];
+
             line.open(audioStream.getFormat());
             line.start();
             int read;
@@ -23,8 +27,6 @@ public class AudioPlayer {
             }
         } catch (LineUnavailableException e) {
             System.out.println("unsupported line");
-        } catch (UnsupportedAudioFileException e) {
-            System.out.println("file type not supported");
         } catch (IOException e) {
             e.printStackTrace();
         }
